@@ -1,7 +1,7 @@
 package project20280.list;
 
 import project20280.interfaces.List;
-
+import java.util.NoSuchElementException;
 import java.util.Iterator;
 
 public class SinglyLinkedList<E> implements List<E> {
@@ -22,7 +22,8 @@ public class SinglyLinkedList<E> implements List<E> {
          * @param n reference to a node that should follow the new node
          */
         public Node(E e, Node<E> n) {
-            // TODO
+            element = e;
+            next = n;
         }
 
         // Accessor methods
@@ -33,7 +34,7 @@ public class SinglyLinkedList<E> implements List<E> {
          * @return the element stored at the node
          */
         public E getElement() {
-            return null;
+            return element;
         }
 
         /**
@@ -42,8 +43,7 @@ public class SinglyLinkedList<E> implements List<E> {
          * @return the following node
          */
         public Node<E> getNext() {
-            // TODO
-            return null;
+            return next;
         }
 
         // Modifier methods
@@ -54,7 +54,7 @@ public class SinglyLinkedList<E> implements List<E> {
          * @param n the node that should follow this one
          */
         public void setNext(Node<E> n) {
-            // TODO
+            next = n;
         }
     } //----------- end of nested Node class -----------
 
@@ -62,6 +62,7 @@ public class SinglyLinkedList<E> implements List<E> {
      * The head node of the list
      */
     private Node<E> head = null;               // head node of the list (or null if empty)
+    private Node<E> tail = null;
 
 
     /**
@@ -74,62 +75,160 @@ public class SinglyLinkedList<E> implements List<E> {
 
     //@Override
     public int size() {
-        // TODO
-        return 0;
+        return size;
     }
 
     //@Override
     public boolean isEmpty() {
-        // TODO
-        return false;
+        return size == 0;
     }
 
     @Override
     public E get(int position) {
-        // TODO
-        return null;
+        if (position < 0 || position >= size) {
+            throw new IndexOutOfBoundsException("Invalid position: " + position);
+        }
+
+        Node<E> current = head;
+
+        for (int i = 0; i < position; i++) {
+            current = current.getNext();
+        }
+
+        return current.getElement();
     }
 
     @Override
     public void add(int position, E e) {
-        // TODO
+        if (position < 0 || position > size) {
+            throw new IndexOutOfBoundsException("Invalid position: " + position);
+        }
+
+        if (position == 0) {
+            addFirst(e);
+            return;
+        }
+
+        if (position == size) {
+            addLast(e);
+            return;
+        }
+
+        Node<E> prev = head;
+        for (int i = 0; i < position - 1; i++) {
+            prev = prev.getNext();
+        }
+
+        Node<E> newest = new Node<>(e, prev.getNext());
+        prev.setNext(newest);
+        size++;
     }
 
 
     @Override
     public void addFirst(E e) {
-        // TODO
+        Node<E> newest = new Node<>(e, head);
+        head = newest;
+
+        if (size == 0) {
+            tail = head;
+        }
+
+        size++;
     }
 
     @Override
     public void addLast(E e) {
-        // TODO
+        Node<E> newest = new Node<>(e, null);
+
+        if (isEmpty()) {
+            head = newest;
+        } else {
+            tail.setNext(newest);
+        }
+
+        tail = newest;
+        size++;
     }
 
     @Override
     public E remove(int position) {
-        // TODO
-        return null;
+        if (position < 0 || position >= size) {
+            throw new IndexOutOfBoundsException("Invalid position: " + position);
+        }
+
+        if (position == 0) {
+            return removeFirst();
+        }
+
+        if (position == size - 1) {
+            return removeLast();
+        }
+
+        Node<E> prev = head;
+        for (int i = 0; i < position - 1; i++) {
+            prev = prev.getNext();
+        }
+
+        Node<E> target = prev.getNext();
+        E answer = target.getElement();
+
+        prev.setNext(target.getNext());
+        size--;
+
+        return answer;
     }
 
     @Override
     public E removeFirst() {
-        // TODO
-        return null;
+        if (isEmpty()) {
+            return null;
+        }
+
+        E answer = head.getElement();
+        head = head.getNext();
+        size--;
+
+        if (size == 0) {
+            tail = null;
+        }
+
+        return answer;
     }
 
     @Override
     public E removeLast() {
-        // TODO
-        return null;
+        if (isEmpty()) {
+            return null;
+        }
+
+        if (size == 1) {
+            E answer = head.getElement();
+            head = null;
+            tail = null;
+            size = 0;
+            return answer;
+        }
+
+        Node<E> current = head;
+        while (current.getNext() != tail) {
+            current = current.getNext();
+        }
+
+        E answer = tail.getElement();
+        tail = current;
+        tail.setNext(null);
+        size--;
+
+        return answer;
     }
 
     //@Override
     public Iterator<E> iterator() {
-        return new SinglyLinkedListIterator<E>();
+        return new SinglyLinkedListIterator();
     }
 
-    private class SinglyLinkedListIterator<E> implements Iterator<E> {
+    private class SinglyLinkedListIterator implements Iterator<E> {
         Node<E> curr = (Node<E>) head;
 
         @Override
