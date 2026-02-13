@@ -1,0 +1,12 @@
+countDescendants(T, p):
+
+    if T.isExternal(p)
+        return 0
+
+    total = 0
+
+    for each child c of p:
+        total = total + 1
+        total = total + countDescendants(T, c)
+
+    return total

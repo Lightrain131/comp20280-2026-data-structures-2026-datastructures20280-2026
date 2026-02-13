@@ -1,0 +1,24 @@
+countLeftExternal(T):
+    if T.isEmpty()
+        return 0
+    return countLeftExternalSubtree(T, T.root())
+
+
+countLeftExternalSubtree(T, p):
+    if p is null
+        return 0
+
+    count = 0
+
+    L = T.left(p)
+    if L ≠ null and T.isExternal(L)
+        count = count + 1
+
+    if L ≠ null
+        count = count + countLeftExternalSubtree(T, L)
+
+    R = T.right(p)
+    if R ≠ null
+        count = count + countLeftExternalSubtree(T, R)
+
+    return count
