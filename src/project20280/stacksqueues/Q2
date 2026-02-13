@@ -1,0 +1,11 @@
+Algorithm enqueue(e):
+    push e onto inStack
+
+Algorithm dequeue():
+    if outStack is empty then
+        while inStack is not empty do
+            push pop(inStack) onto outStack
+    if outStack is empty then
+        return null
+    else
+        return pop(outStack)
