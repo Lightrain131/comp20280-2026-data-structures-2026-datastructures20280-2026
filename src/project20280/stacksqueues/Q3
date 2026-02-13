@@ -1,0 +1,13 @@
+Algorithm reverseStack(S):
+
+    create empty stack S1
+    create empty stack S2
+
+    while S is not empty do
+        push pop(S) onto S1
+
+    while S1 is not empty do
+        push pop(S1) onto S2
+
+    while S2 is not empty do
+        push pop(S2) onto S
