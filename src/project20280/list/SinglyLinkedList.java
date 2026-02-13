@@ -290,6 +290,38 @@ public class SinglyLinkedList<E> implements List<E> {
         return result;
     }
 
+    public void reverse() {
+
+        Node<E> prev = null;
+        Node<E> curr = head;
+        Node<E> next;
+
+        tail = head;
+
+        while (curr != null) {
+            next = curr.getNext();
+            curr.setNext(prev);
+            prev = curr;
+            curr = next;
+        }
+
+        head = prev;
+    }
+
+    public SinglyLinkedList<E> copy() {
+
+        SinglyLinkedList<E> twin = new SinglyLinkedList<>();
+
+        Node<E> tmp = head;
+
+        while (tmp != null) {
+            twin.addLast(tmp.getElement());
+            tmp = tmp.getNext();
+        }
+
+        return twin;
+    }
+
     public static void main(String[] args) {
         SinglyLinkedList<Integer> ll = new SinglyLinkedList<Integer>();
         System.out.println("ll " + ll + " isEmpty: " + ll.isEmpty());
@@ -317,6 +349,20 @@ public class SinglyLinkedList<E> implements List<E> {
         l2.addLast(12); l2.addLast(19); l2.addLast(25);
 
         System.out.println(l1.sortedMerge(l2));
+
+        SinglyLinkedList<Integer> test = new SinglyLinkedList<>();
+        test.addLast(1);
+        test.addLast(2);
+        test.addLast(3);
+        test.addLast(4);
+
+        System.out.println("original: " + test);
+
+        test.reverse();
+        System.out.println("reversed: " + test);
+
+        SinglyLinkedList<Integer> clone = test.copy();
+        System.out.println("copy: " + clone);
 
     }
 }
