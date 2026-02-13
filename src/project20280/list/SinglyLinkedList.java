@@ -257,6 +257,39 @@ public class SinglyLinkedList<E> implements List<E> {
         return sb.toString();
     }
 
+    public SinglyLinkedList<E> sortedMerge(SinglyLinkedList<E> other) {
+
+        SinglyLinkedList<E> result = new SinglyLinkedList<>();
+
+        Node<E> p1 = this.head;
+        Node<E> p2 = other.head;
+
+        while (p1 != null && p2 != null) {
+            E a = p1.getElement();
+            E b = p2.getElement();
+
+            if (((Comparable<? super E>) a).compareTo(b) <= 0) {
+                result.addLast(a);
+                p1 = p1.getNext();
+            } else {
+                result.addLast(b);
+                p2 = p2.getNext();
+            }
+        }
+
+        while (p1 != null) {
+            result.addLast(p1.getElement());
+            p1 = p1.getNext();
+        }
+
+        while (p2 != null) {
+            result.addLast(p2.getElement());
+            p2 = p2.getNext();
+        }
+
+        return result;
+    }
+
     public static void main(String[] args) {
         SinglyLinkedList<Integer> ll = new SinglyLinkedList<Integer>();
         System.out.println("ll " + ll + " isEmpty: " + ll.isEmpty());
@@ -275,6 +308,15 @@ public class SinglyLinkedList<E> implements List<E> {
         System.out.println(ll);
         ll.remove(5);
         System.out.println(ll);
+
+        SinglyLinkedList<Integer> l1 = new SinglyLinkedList<>();
+        l1.addLast(2); l1.addLast(6); l1.addLast(20); l1.addLast(24);
+
+        SinglyLinkedList<Integer> l2 = new SinglyLinkedList<>();
+        l2.addLast(1); l2.addLast(3); l2.addLast(5); l2.addLast(8);
+        l2.addLast(12); l2.addLast(19); l2.addLast(25);
+
+        System.out.println(l1.sortedMerge(l2));
 
     }
 }
