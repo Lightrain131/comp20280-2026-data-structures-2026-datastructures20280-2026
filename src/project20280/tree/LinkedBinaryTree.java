@@ -54,10 +54,25 @@ public class LinkedBinaryTree<E> extends AbstractBinaryTree<E> {
     // accessor methods (not already implemented in AbstractBinaryTree)
 
     public static void main(String [] args) {
+
         LinkedBinaryTree<String> bt = new LinkedBinaryTree<>();
         String[] arr = { "A", "B", "C", "D", "E", null, "F", null, null, "G", "H", null, null, null, null };
+
         bt.createLevelOrder(arr);
         System.out.println(bt.toBinaryTreeString());
+
+        Integer [] inorder= {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
+                18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30};
+
+        Integer [] preorder= {18, 2, 1, 14, 13, 12, 4, 3, 9, 6, 5, 8, 7, 10, 11, 15, 16,
+                17, 28, 23, 19, 22, 20, 21, 24, 27, 26, 25, 29, 30};
+
+        LinkedBinaryTree<Integer> bt2 = new LinkedBinaryTree<>();
+        bt2.construct(inorder, preorder);
+
+        System.out.println(bt2.toBinaryTreeString());
+
+        experiment();
     }
 
 
@@ -415,6 +430,112 @@ public class LinkedBinaryTree<E> extends AbstractBinaryTree<E> {
                 sb.append(element);
             }
             return sb.toString();
+        }
+    }
+
+    public void construct(E[] inorder, E[] preorder) {
+        size = 0;
+        root = constructHelper(inorder, preorder, 0, inorder.length - 1, 0, null);
+    }
+
+    private Node<E> constructHelper(E[] inorder, E[] preorder,
+                                    int inStart, int inEnd,
+                                    int preIndex,
+                                    Node<E> parent) {
+
+        if (inStart > inEnd || preIndex >= preorder.length)
+            return null;
+
+        E rootVal = preorder[preIndex];
+        Node<E> node = createNode(rootVal, parent, null, null);
+        size++;
+
+        int rootIndex = findIndex(inorder, rootVal, inStart, inEnd);
+
+        int leftSize = rootIndex - inStart;
+
+        node.setLeft(
+                constructHelper(inorder, preorder,
+                        inStart,
+                        rootIndex - 1,
+                        preIndex + 1,
+                        node)
+        );
+
+        node.setRight(
+                constructHelper(inorder, preorder,
+                        rootIndex + 1,
+                        inEnd,
+                        preIndex + leftSize + 1,
+                        node)
+        );
+
+        return node;
+    }
+
+    private int findIndex(E[] arr, E val, int start, int end) {
+        for (int i = start; i <= end; i++) {
+            if (arr[i].equals(val))
+                return i;
+        }
+        return -1;
+    }
+
+    public ArrayList<ArrayList<E>> rootToLeafPaths() {
+        ArrayList<ArrayList<E>> result = new ArrayList<>();
+        ArrayList<E> path = new ArrayList<>();
+
+        rootToLeafHelper(root, path, result);
+
+        return result;
+    }
+
+    private void rootToLeafHelper(Node<E> node,
+                                  ArrayList<E> path,
+                                  ArrayList<ArrayList<E>> result) {
+
+        if (node == null)
+            return;
+
+        path.add(node.getElement());
+
+        if (node.getLeft() == null && node.getRight() == null) {
+            result.add(new ArrayList<>(path));
+        } else {
+            rootToLeafHelper(node.getLeft(), path, result);
+            rootToLeafHelper(node.getRight(), path, result);
+        }
+
+        path.remove(path.size() - 1);
+    }
+
+    public int height(Node<E> node) {
+
+        if (node == null)
+            return 0;
+
+        return 1 + Math.max(
+                height(node.getLeft()),
+                height(node.getRight())
+        );
+    }
+
+    public static void experiment() {
+
+        for (int n = 50; n <= 5000; n += 50) {
+
+            double totalHeight = 0;
+
+            for (int i = 0; i < 100; i++) {
+
+                LinkedBinaryTree<Integer> tree = LinkedBinaryTree.makeRandom(n);
+
+                totalHeight += tree.height(tree.root);
+            }
+
+            double avg = totalHeight / 100.0;
+
+            System.out.println(n + "," + avg);
         }
     }
 }

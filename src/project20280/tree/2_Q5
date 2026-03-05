@@ -1,0 +1,23 @@
+function diameter(node):
+
+    if node == null
+        return 0
+
+    leftHeight = height(node.left)
+    rightHeight = height(node.right)
+
+    leftDiameter = diameter(node.left)
+    rightDiameter = diameter(node.right)
+
+    return max(
+        leftHeight + rightHeight + 1,
+        max(leftDiameter, rightDiameter)
+    )
+
+
+function height(node):
+
+    if node == null
+        return 0
+
+    return 1 + max(height(node.left), height(node.right))
