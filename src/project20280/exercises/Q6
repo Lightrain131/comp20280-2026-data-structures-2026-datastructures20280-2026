@@ -1,0 +1,8 @@
+printReverse(node)
+
+if node == null
+    return
+
+printReverse(node.next)
+
+print node.element

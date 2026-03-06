@@ -1,0 +1,10 @@
+copy(node)
+
+if node == null
+    return null
+
+newNode = new Node(node.element)
+
+newNode.next = copy(node.next)
+
+return newNode

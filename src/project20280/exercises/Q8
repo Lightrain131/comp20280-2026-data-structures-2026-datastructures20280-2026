@@ -1,0 +1,9 @@
+mystery(2,4,4)
+= 4 + mystery(1,4,4)
+
+mystery(1,4,4)
+= 4
+
+mystery(2,4,4)
+= 4 + 4
+= 8

@@ -73,6 +73,13 @@ public class LinkedBinaryTree<E> extends AbstractBinaryTree<E> {
         System.out.println(bt2.toBinaryTreeString());
 
         experiment();
+
+        System.out.println();
+        bt.printLeaves(bt.root());
+        System.out.println();
+        System.out.println();
+
+        inorderExperiment();
     }
 
 
@@ -536,6 +543,41 @@ public class LinkedBinaryTree<E> extends AbstractBinaryTree<E> {
             double avg = totalHeight / 100.0;
 
             System.out.println(n + "," + avg);
+        }
+    }
+
+    public void printLeaves(Position<E> p) {
+
+        if (p == null)
+            return;
+
+        if (left(p) == null && right(p) == null) {
+            System.out.print(p.getElement() + " ");
+            return;
+        }
+
+        if (left(p) != null)
+            printLeaves(left(p));
+
+        if (right(p) != null)
+            printLeaves(right(p));
+    }
+
+    public static void inorderExperiment() {
+
+        for (int n = 10; n <= 10000; n += 500) {
+
+            LinkedBinaryTree<Integer> tree = LinkedBinaryTree.makeRandom(n);
+
+            long start = System.nanoTime();
+
+            tree.inorder();
+
+            long end = System.nanoTime();
+
+            long time = end - start;
+
+            System.out.println(n + "," + time);
         }
     }
 }

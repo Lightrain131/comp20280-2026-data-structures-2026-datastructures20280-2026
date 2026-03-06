@@ -322,6 +322,35 @@ public class SinglyLinkedList<E> implements List<E> {
         return twin;
     }
 
+    public SinglyLinkedList<E> recursiveCopy() {
+
+        SinglyLinkedList<E> result = new SinglyLinkedList<>();
+
+        result.head = recursiveCopyNodes(this.head);
+
+        // 更新 tail 和 size
+        Node<E> tmp = result.head;
+        while (tmp != null) {
+            result.tail = tmp;
+            result.size++;
+            tmp = tmp.getNext();
+        }
+
+        return result;
+    }
+
+    private Node<E> recursiveCopyNodes(Node<E> node) {
+
+        if (node == null)
+            return null;
+
+        Node<E> newNode = new Node<>(node.getElement(), null);
+
+        newNode.setNext(recursiveCopyNodes(node.getNext()));
+
+        return newNode;
+    }
+
     public static void main(String[] args) {
         SinglyLinkedList<Integer> ll = new SinglyLinkedList<Integer>();
         System.out.println("ll " + ll + " isEmpty: " + ll.isEmpty());
